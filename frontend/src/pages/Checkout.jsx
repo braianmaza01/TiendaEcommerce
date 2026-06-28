@@ -4,6 +4,7 @@ import axios from 'axios'
 import { useCarrito } from '../context/CarritoContext'
 import { formatearPrecio } from '../utils/formato'
 import { WHATSAPP_TIENDA, DIRECCION_LOCAL } from '../utils/contacto'
+import { API_URL } from '../utils/api'
 
 export default function Checkout() {
   const { items, total, vaciarCarrito } = useCarrito()
@@ -100,7 +101,7 @@ ${lineaPago}
     setError(null)
 
     try {
-      const res = await axios.post('http://localhost:5000/api/pedidos', {
+      const res = await axios.post(`${API_URL}/api/pedidos`, {
         cliente: datos,
         entrega: {
           tipo: tipoEntrega,

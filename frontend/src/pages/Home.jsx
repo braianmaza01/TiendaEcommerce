@@ -3,6 +3,7 @@ import axios from 'axios'
 import Hero from '../components/Hero'
 import Destacados from '../components/Destacados'
 import BannerRetiro from '../components/BannerRetiro'
+import { API_URL } from '../utils/api'
 
 export default function Home() {
   const [productos, setProductos] = useState([])
@@ -10,7 +11,7 @@ export default function Home() {
 
   useEffect(() => {
     axios
-      .get('http://localhost:5000/api/productos')
+      .get(`${API_URL}/api/productos`)
       .then((res) => setProductos(res.data))
       .catch(() => setProductos([]))
       .finally(() => setCargando(false))

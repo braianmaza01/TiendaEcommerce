@@ -4,6 +4,7 @@ import axios from 'axios'
 import { useCarrito } from '../context/CarritoContext'
 import PrecioProducto from '../components/PrecioProducto'
 import ProductCard from '../components/ProductCard'
+import { API_URL } from '../utils/api'
 
 export default function Producto() {
   const { id } = useParams()
@@ -19,7 +20,7 @@ export default function Producto() {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:5000/api/productos/${id}`)
+      .get(`${API_URL}/api/productos/${id}`)
       .then((res) => setProducto(res.data))
       .catch(() => setError('No se pudo cargar el producto.'))
       .finally(() => setCargando(false))
@@ -28,7 +29,7 @@ export default function Producto() {
   useEffect(() => {
     if (!producto) return
     axios
-      .get('http://localhost:5000/api/productos')
+      .get(`${API_URL}/api/productos`)
       .then((res) => {
         const filtrados = res.data.filter(
           (p) => p._id !== producto._id && p.categoria === producto.categoria

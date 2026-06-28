@@ -1,5 +1,6 @@
 import { createContext, useContext, useState } from 'react'
 import axios from 'axios'
+import { API_URL } from '../utils/api'
 
 const AdminAuthContext = createContext()
 
@@ -13,7 +14,7 @@ export function AdminAuthProvider({ children }) {
   )
 
   async function login(usuario, contrasena) {
-    const res = await axios.post('http://localhost:5000/api/auth/login', {
+    const res = await axios.post(`${API_URL}/api/auth/login`, {
       usuario,
       contrasena,
     })

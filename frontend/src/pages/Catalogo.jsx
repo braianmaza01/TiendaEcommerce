@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import axios from 'axios'
 import ProductCard from '../components/ProductCard'
+import { API_URL } from '../utils/api'
 
 const TREINTA_DIAS_MS = 30 * 24 * 60 * 60 * 1000
 const GENEROS_VALIDOS = ['hombre', 'mujer']
@@ -25,7 +26,7 @@ export default function Catalogo() {
 
   useEffect(() => {
     axios
-      .get('http://localhost:5000/api/productos')
+      .get(`${API_URL}/api/productos`)
       .then((res) => setProductos(res.data))
       .catch(() => setError('No se pudieron cargar los productos.'))
       .finally(() => setCargando(false))

@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import { useCarrito } from '../context/CarritoContext'
 import { formatearPrecio } from '../utils/formato'
+import { API_URL } from '../utils/api'
 
 const enlacesPrincipales = [
   { label: 'NUEVA COLECCIÓN', to: '/catalogo?filtro=nuevo' },
@@ -79,7 +80,7 @@ export default function Navbar() {
     setBuscando(true)
     const timeout = setTimeout(() => {
       axios
-        .get(`http://localhost:5000/api/productos?nombre=${encodeURIComponent(query)}`)
+        .get(`${API_URL}/api/productos?nombre=${encodeURIComponent(query)}`)
         .then((res) => setResultados(res.data))
         .catch(() => setResultados([]))
         .finally(() => setBuscando(false))
