@@ -54,44 +54,49 @@ export default function Carrito() {
           {items.map((item) => (
             <div
               key={`${item._id}-${item.talla}`}
-              className="flex items-center gap-4 bg-carta border border-borde rounded-lg p-4"
+              className="bg-carta border border-borde rounded-lg p-4 space-y-4"
             >
-              <img
-                src={item.imagen || 'https://via.placeholder.com/100x133?text=URBX'}
-                alt={item.nombre}
-                className="w-20 h-28 object-cover rounded"
-              />
-              <div className="flex-1 text-crema">
-                <h3 className="font-medium capitalize">{item.nombre}</h3>
-                <p className="text-sm opacity-70">Talla: {item.talla}</p>
-                <p className="text-dorado font-bold">{formatearPrecio(item.precio)}</p>
+              <div className="flex items-center gap-4">
+                <img
+                  src={item.imagen || 'https://via.placeholder.com/100x133?text=URBX'}
+                  alt={item.nombre}
+                  className="w-20 h-28 object-cover rounded shrink-0"
+                />
+                <div className="flex-1 text-crema min-w-0">
+                  <h3 className="font-medium capitalize truncate">{item.nombre}</h3>
+                  <p className="text-sm opacity-70">Talla: {item.talla}</p>
+                  <p className="text-dorado font-bold">{formatearPrecio(item.precio)}</p>
+                </div>
               </div>
 
-              <div className="flex items-center">
+              <div className="flex items-center justify-between gap-4">
+                <div className="flex items-center">
+                  <button
+                    type="button"
+                    onClick={() => handleDecrementar(item)}
+                    disabled={item.cantidad <= 1}
+                    className="w-8 h-8 flex items-center justify-center border border-borde text-crema hover:border-dorado hover:text-dorado transition-colors disabled:opacity-40 disabled:hover:border-borde disabled:hover:text-crema disabled:cursor-not-allowed"
+                  >
+                    −
+                  </button>
+                  <span className="w-10 text-center text-crema">{item.cantidad}</span>
+                  <button
+                    type="button"
+                    onClick={() => handleIncrementar(item)}
+                    className="w-8 h-8 flex items-center justify-center border border-borde text-crema hover:border-dorado hover:text-dorado transition-colors"
+                  >
+                    +
+                  </button>
+                </div>
+
                 <button
                   type="button"
-                  onClick={() => handleDecrementar(item)}
-                  disabled={item.cantidad <= 1}
-                  className="w-8 h-8 flex items-center justify-center border border-borde text-crema hover:border-dorado hover:text-dorado transition-colors disabled:opacity-40 disabled:hover:border-borde disabled:hover:text-crema disabled:cursor-not-allowed"
+                  onClick={() => quitarItem(item._id, item.talla)}
+                  className="text-red-400 hover:text-red-300 text-sm shrink-0"
                 >
-                  −
-                </button>
-                <span className="w-10 text-center text-crema">{item.cantidad}</span>
-                <button
-                  type="button"
-                  onClick={() => handleIncrementar(item)}
-                  className="w-8 h-8 flex items-center justify-center border border-borde text-crema hover:border-dorado hover:text-dorado transition-colors"
-                >
-                  +
+                  Eliminar
                 </button>
               </div>
-
-              <button
-                onClick={() => quitarItem(item._id, item.talla)}
-                className="text-red-400 hover:text-red-300"
-              >
-                Eliminar
-              </button>
             </div>
           ))}
 

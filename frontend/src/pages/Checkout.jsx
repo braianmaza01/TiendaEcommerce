@@ -82,10 +82,18 @@ ${lineaPago}
 *Total: $${total.toLocaleString('es-AR')}*`
   }
 
-  function abrirWhatsApp() {
+  function construirUrlWhatsApp() {
     const mensaje = construirMensajeWhatsApp()
-    const url = `https://wa.me/${WHATSAPP_TIENDA}?text=${encodeURIComponent(mensaje)}`
-    window.open(url, '_blank')
+    return `https://wa.me/${WHATSAPP_TIENDA}?text=${encodeURIComponent(mensaje)}`
+  }
+
+  function abrirWhatsApp(whatsappUrl) {
+    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent)
+    if (isMobile) {
+      window.location.href = whatsappUrl
+    } else {
+      window.open(whatsappUrl, '_blank')
+    }
   }
 
   async function handleSubmit(e) {
@@ -99,6 +107,8 @@ ${lineaPago}
 
     setEnviando(true)
     setError(null)
+
+    const urlWhatsApp = construirUrlWhatsApp()
 
     try {
       const res = await axios.post(`${API_URL}/api/pedidos`, {
@@ -117,7 +127,7 @@ ${lineaPago}
         })),
         total,
       })
-      abrirWhatsApp()
+      abrirWhatsApp(urlWhatsApp)
       setPedidoConfirmado(res.data)
       vaciarCarrito()
     } catch {
