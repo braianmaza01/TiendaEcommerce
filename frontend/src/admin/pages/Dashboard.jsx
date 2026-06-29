@@ -273,8 +273,8 @@ export default function Dashboard() {
               </div>
 
               {ingresosMesAnterior === 0 ? (
-                <p className="mt-4 text-sm text-[#888]">
-                  Primer mes con ventas registradas 🎉
+                <p className="mt-4 text-sm text-[#555]">
+                  Sin ventas el mes anterior
                 </p>
               ) : (
                 <p
