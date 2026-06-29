@@ -236,14 +236,24 @@ export default function Dashboard() {
                 <div>
                   <div className="flex justify-between text-xs text-gris mb-1">
                     <span className="capitalize">{nombreMes(mesAnteriorRef)}</span>
-                    <span>{formatearPrecio(ingresosMesAnterior)}</span>
+                    {ingresosMesAnterior === 0 ? (
+                      <span className="text-[#555]">Sin registros</span>
+                    ) : (
+                      <span>{formatearPrecio(ingresosMesAnterior)}</span>
+                    )}
                   </div>
-                  <div className="h-2 bg-oscuro rounded-full overflow-hidden">
-                    <div
-                      className="h-full bg-gris2"
-                      style={{ width: `${anchoBarraAnterior}%` }}
-                    />
-                  </div>
+                  {ingresosMesAnterior === 0 ? (
+                    <p className="text-[#555] text-[11px] mt-1">
+                      El historial irá apareciendo mes a mes
+                    </p>
+                  ) : (
+                    <div className="h-2 bg-oscuro rounded-full overflow-hidden">
+                      <div
+                        className="h-full bg-gris2"
+                        style={{ width: `${anchoBarraAnterior}%` }}
+                      />
+                    </div>
+                  )}
                 </div>
 
                 <div>
@@ -262,14 +272,20 @@ export default function Dashboard() {
                 </div>
               </div>
 
-              <p
-                className={`mt-4 text-sm font-bold ${
-                  crecimiento >= 0 ? 'text-[#4caf50]' : 'text-[#e53935]'
-                }`}
-              >
-                {crecimiento >= 0 ? '▲' : '▼'} {Math.abs(crecimiento).toFixed(1)}%{' '}
-                {crecimiento >= 0 ? 'más' : 'menos'} que el mes anterior
-              </p>
+              {ingresosMesAnterior === 0 ? (
+                <p className="mt-4 text-sm text-[#888]">
+                  Primer mes con ventas registradas 🎉
+                </p>
+              ) : (
+                <p
+                  className={`mt-4 text-sm font-bold ${
+                    crecimiento >= 0 ? 'text-[#4caf50]' : 'text-[#e53935]'
+                  }`}
+                >
+                  {crecimiento >= 0 ? '▲' : '▼'} {Math.abs(crecimiento).toFixed(1)}%{' '}
+                  {crecimiento >= 0 ? 'más' : 'menos'} que el mes anterior
+                </p>
+              )}
             </div>
           </div>
         </div>
