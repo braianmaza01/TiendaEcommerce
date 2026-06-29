@@ -1,4 +1,5 @@
-import { MercadoPagoConfig, Preference } from 'mercadopago'
+import { MercadoPagoConfig, Preference, Payment } from 'mercadopago'
+import Pedido from '../models/Pedido.js'
 
 export async function crearPreferencia(req, res) {
   try {
@@ -26,6 +27,7 @@ export async function crearPreferencia(req, res) {
           pending: 'https://urbx-store.netlify.app/pago-pendiente',
         },
         auto_return: 'approved',
+        notification_url: 'https://urbx-backend-9soz.onrender.com/api/pagos/webhook',
       },
     })
 
@@ -35,5 +37,34 @@ export async function crearPreferencia(req, res) {
       mensaje: 'Error al crear la preferencia de pago',
       error: error.message,
     })
+  }
+}
+
+export async function webhook(req, res) {
+  try {
+    const tipo = req.query.type || req.body?.type
+    const paymentId = req.query['data.id'] || req.body?.data?.id
+
+    if (tipo === 'payment' && paymentId) {
+      const client = new MercadoPagoConfig({ accessToken: process.env.MP_ACCESS_TOKEN })
+      const paymentClient = new Payment(client)
+      const pago = await paymentClient.get({ id: paymentId })
+
+      const externalReference = pago.external_reference
+      const estadoPago = pago.status
+
+      if (externalReference) {
+        if (estadoPago === 'approved') {
+          await Pedido.findByIdAndUpdate(externalReference, { estado: 'pagado' })
+        } else if (estadoPago === 'rejected') {
+          await Pedido.findByIdAndUpdate(externalReference, { estado: 'cancelado' })
+        }
+      }
+    }
+
+    res.sendStatus(200)
+  } catch (error) {
+    console.error('Error al procesar webhook de Mercado Pago:', error.message)
+    res.sendStatus(200)
   }
 }
