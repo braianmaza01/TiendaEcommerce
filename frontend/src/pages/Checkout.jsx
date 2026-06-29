@@ -61,7 +61,11 @@ export default function Checkout() {
         : `Retiro en local\nDirección del local: ${DIRECCION_LOCAL}`
 
     const lineaPago =
-      metodoPago === 'transferencia' ? 'Transferencia bancaria' : 'Efectivo al retirar/recibir'
+      metodoPago === 'transferencia'
+        ? 'Transferencia bancaria'
+        : metodoPago === 'mercadopago'
+          ? 'Tarjeta / Mercado Pago'
+          : 'Efectivo al retirar/recibir'
 
     return `🛍️ Nuevo pedido URBX
 
@@ -127,6 +131,21 @@ ${lineaPago}
         })),
         total,
       })
+
+      if (metodoPago === 'mercadopago') {
+        const prefRes = await axios.post(`${API_URL}/api/pagos/crear-preferencia`, {
+          items: items.map((item) => ({
+            nombre: item.nombre,
+            cantidad: item.cantidad,
+            precio: item.precio,
+          })),
+          comprador: datos,
+          pedidoId: res.data._id,
+        })
+        window.location.href = prefRes.data.init_point
+        return
+      }
+
       abrirWhatsApp(urlWhatsApp)
       setPedidoConfirmado(res.data)
       vaciarCarrito()
@@ -357,6 +376,33 @@ ${lineaPago}
               {metodoPago === 'transferencia' && (
                 <p className="text-gris text-sm">
                   Te enviaremos los datos bancarios por email luego de confirmar el pedido.
+                </p>
+              )}
+
+              <label
+                className={`flex items-center gap-3 border rounded-lg p-4 cursor-pointer transition-colors ${
+                  metodoPago === 'mercadopago' ? 'border-dorado' : 'border-borde hover:border-gris'
+                }`}
+              >
+                <input
+                  type="radio"
+                  name="metodoPago"
+                  checked={metodoPago === 'mercadopago'}
+                  onChange={() => setMetodoPago('mercadopago')}
+                  className="accent-dorado"
+                />
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" className="shrink-0">
+                  <rect x="2" y="5" width="20" height="14" rx="2" />
+                  <path d="M2 10h20" />
+                </svg>
+                <span className={metodoPago === 'mercadopago' ? 'text-dorado' : 'text-crema'}>
+                  Tarjeta / Mercado Pago
+                </span>
+              </label>
+
+              {metodoPago === 'mercadopago' && (
+                <p className="text-gris text-sm">
+                  Vas a ser redirigido a Mercado Pago para completar el pago de forma segura.
                 </p>
               )}
             </div>

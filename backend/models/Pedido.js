@@ -17,7 +17,7 @@ const pedidoSchema = new mongoose.Schema(
     },
     metodoPago: {
       type: String,
-      enum: ['efectivo', 'transferencia'],
+      enum: ['efectivo', 'transferencia', 'mercadopago'],
       default: 'efectivo',
     },
     productos: [

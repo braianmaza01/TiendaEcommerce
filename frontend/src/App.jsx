@@ -12,6 +12,9 @@ import RetiroEnLocal from './pages/RetiroEnLocal'
 import Envios from './pages/Envios'
 import Contacto from './pages/Contacto'
 import SobreNosotros from './pages/SobreNosotros'
+import PagoExitoso from './pages/PagoExitoso'
+import PagoFallido from './pages/PagoFallido'
+import PagoPendiente from './pages/PagoPendiente'
 import { AdminAuthProvider } from './admin/AuthContext'
 import RutaProtegida from './admin/RutaProtegida'
 import AdminLayout from './admin/AdminLayout'
@@ -49,6 +52,9 @@ function App() {
           <Route path="/envios" element={<Envios />} />
           <Route path="/contacto" element={<Contacto />} />
           <Route path="/sobre-nosotros" element={<SobreNosotros />} />
+          <Route path="/pago-exitoso" element={<PagoExitoso />} />
+          <Route path="/pago-fallido" element={<PagoFallido />} />
+          <Route path="/pago-pendiente" element={<PagoPendiente />} />
         </Route>
 
         <Route
