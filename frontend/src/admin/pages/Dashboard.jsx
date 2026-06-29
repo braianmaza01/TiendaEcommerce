@@ -44,7 +44,15 @@ export default function Dashboard() {
     )
   }
 
+  const mesMinimo =
+    pedidos.length > 0
+      ? inicioDeMes(
+          new Date(Math.min(...pedidos.map((p) => new Date(p.createdAt).getTime())))
+        )
+      : inicioDeMes(new Date())
+
   const esMesActual = esMismoMes(mesSeleccionado, inicioDeMes(new Date()))
+  const esMesMinimo = mesSeleccionado.getTime() <= mesMinimo.getTime()
   const mesAnteriorRef = new Date(
     mesSeleccionado.getFullYear(),
     mesSeleccionado.getMonth() - 1,
@@ -116,8 +124,9 @@ export default function Dashboard() {
           <button
             type="button"
             onClick={() => cambiarMes(-1)}
+            disabled={esMesMinimo}
             aria-label="Mes anterior"
-            className="w-9 h-9 flex items-center justify-center border border-borde rounded-lg text-crema hover:border-dorado hover:text-dorado transition-colors"
+            className="w-9 h-9 flex items-center justify-center border border-borde rounded-lg text-crema hover:border-dorado hover:text-dorado transition-colors disabled:text-[#555] disabled:border-[#555] disabled:hover:border-[#555] disabled:hover:text-[#555] disabled:cursor-not-allowed"
           >
             ←
           </button>
@@ -129,7 +138,7 @@ export default function Dashboard() {
             onClick={() => cambiarMes(1)}
             disabled={esMesActual}
             aria-label="Mes siguiente"
-            className="w-9 h-9 flex items-center justify-center border border-borde rounded-lg text-crema hover:border-dorado hover:text-dorado transition-colors disabled:opacity-30 disabled:hover:border-borde disabled:hover:text-crema disabled:cursor-not-allowed"
+            className="w-9 h-9 flex items-center justify-center border border-borde rounded-lg text-crema hover:border-dorado hover:text-dorado transition-colors disabled:text-[#555] disabled:border-[#555] disabled:hover:border-[#555] disabled:hover:text-[#555] disabled:cursor-not-allowed"
           >
             →
           </button>
