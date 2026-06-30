@@ -43,6 +43,34 @@ export async function eliminarPedido(req, res) {
   }
 }
 
+export async function cancelarPendientesViejos(req, res) {
+  try {
+    const haceSieteDias = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000)
+    const resultado = await Pedido.updateMany(
+      { estado: 'pendiente', createdAt: { $lt: haceSieteDias } },
+      { estado: 'cancelado' }
+    )
+    res.json({ cancelados: resultado.modifiedCount })
+  } catch (error) {
+    res.status(500).json({
+      mensaje: 'Error al cancelar pedidos pendientes',
+      error: error.message,
+    })
+  }
+}
+
+export async function eliminarCancelados(req, res) {
+  try {
+    const resultado = await Pedido.deleteMany({ estado: 'cancelado' })
+    res.json({ eliminados: resultado.deletedCount })
+  } catch (error) {
+    res.status(500).json({
+      mensaje: 'Error al eliminar pedidos cancelados',
+      error: error.message,
+    })
+  }
+}
+
 export async function actualizarEstadoPedido(req, res) {
   try {
     const { estado } = req.body

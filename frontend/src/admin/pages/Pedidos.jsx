@@ -56,6 +56,41 @@ export default function Pedidos() {
     }
   }
 
+  async function handleCancelarViejos() {
+    if (
+      !window.confirm(
+        '¿Cancelar todos los pedidos pendientes de más de 7 días?'
+      )
+    )
+      return
+
+    try {
+      const res = await api.put('/pedidos/cancelar-viejos')
+      const actualizados = await api.get('/pedidos')
+      setPedidos(actualizados.data)
+      alert(`Se cancelaron ${res.data.cancelados} pedido(s).`)
+    } catch {
+      alert('No se pudieron cancelar los pedidos pendientes.')
+    }
+  }
+
+  async function handleEliminarCancelados() {
+    if (
+      !window.confirm(
+        '¿Eliminar todos los pedidos cancelados? Esta acción no se puede deshacer.'
+      )
+    )
+      return
+
+    try {
+      const res = await api.delete('/pedidos/cancelar-todos')
+      setPedidos((prev) => prev.filter((p) => p.estado !== 'cancelado'))
+      alert(`Se eliminaron ${res.data.eliminados} pedido(s).`)
+    } catch {
+      alert('No se pudieron eliminar los pedidos cancelados.')
+    }
+  }
+
   const pedidosFiltrados = pedidos.filter(
     (p) => filtro === 'todos' || p.estado === filtro
   )
@@ -64,18 +99,41 @@ export default function Pedidos() {
     <div>
       <h1 className="text-2xl font-bold text-crema mb-8">Pedidos</h1>
 
-      <div className="flex flex-wrap gap-6 mb-8 border-b border-borde pb-5">
-        {FILTROS.map((f) => (
-          <button
-            key={f.valor}
-            onClick={() => setFiltro(f.valor)}
-            className={`text-xs tracking-[0.15em] transition-colors ${
-              filtro === f.valor ? 'text-dorado' : 'text-gris hover:text-crema'
-            }`}
-          >
-            {f.label}
-          </button>
-        ))}
+      <div className="flex flex-wrap items-center justify-between gap-4 mb-8 border-b border-borde pb-5">
+        <div className="flex flex-wrap gap-6">
+          {FILTROS.map((f) => (
+            <button
+              key={f.valor}
+              onClick={() => setFiltro(f.valor)}
+              className={`text-xs tracking-[0.15em] transition-colors ${
+                filtro === f.valor ? 'text-dorado' : 'text-gris hover:text-crema'
+              }`}
+            >
+              {f.label}
+            </button>
+          ))}
+        </div>
+
+        <div className="flex flex-wrap gap-3">
+          {filtro === 'pendiente' && (
+            <button
+              type="button"
+              onClick={handleCancelarViejos}
+              className="border border-dorado text-dorado text-xs tracking-[0.1em] px-4 py-2 rounded hover:bg-dorado hover:text-oscuro transition-colors"
+            >
+              Cancelar pendientes viejos
+            </button>
+          )}
+          {filtro === 'cancelado' && (
+            <button
+              type="button"
+              onClick={handleEliminarCancelados}
+              className="border border-[#e53935] text-[#e53935] text-xs tracking-[0.1em] px-4 py-2 rounded hover:bg-[#e53935] hover:text-crema transition-colors"
+            >
+              Eliminar cancelados
+            </button>
+          )}
+        </div>
       </div>
 
       {cargando && <p className="text-gris">Cargando...</p>}
